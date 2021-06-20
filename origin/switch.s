@@ -3,6 +3,7 @@
 .section .text
 .global switch_to
 switch_to:
+	call closealarm
 	push %ebp
 	mov %esp,%ebp /* in order to find flag */
 
@@ -31,4 +32,5 @@ switch_to:
 	popl %edi
 
 	popl %ebp
+	call openalarm
 	ret

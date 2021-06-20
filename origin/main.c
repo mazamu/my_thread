@@ -32,7 +32,7 @@ void fun4() {
 	while(i--) {
 		printf("hello,I'm fun4\n");
 		for(m = 0; m < 10000; m++) 
-		  for(n = 0l n < 10000; n++);
+		  for(n = 0; n < 10000; n++);
 	}
 }
 
@@ -48,7 +48,7 @@ int main()
 	thread_create(&tid4,fun4);
 	printf("create thread %d\n",tid4);
 	
-	1nt i = 2;
+	int i = 2;
 	while(i--) {
 		printf("hello,I'm main\n");
 		mysleep(3);

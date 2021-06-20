@@ -1,17 +1,19 @@
 #include"thread.h"
+#include<stdio.h>
+#include<signal.h>
+#include<sys/time.h>
 #include<stdlib.h>
 
 void schedule();
-static struct task_struct init_task = {0,NULL,0,{0}};
+static struct task_struct init_task = {0,NULL,THREAD_RUNNING,0,0,15,15,{0}};
 struct task_struct *current = &init_task;
 struct task_struct *task[NR_TASKS] = {&init_task};
 void start(struct task_struct *tsk) {
 	tsk->th_fn();
-	task[tsk->id] = NULL;//to be care about,it's stored in switch,just not working
-	struct task_struct *next = pick();
-	if(next) {
-		switch_to(next);
-	}
+	tsk->status = THREAD_EXIT;
+	printf("thread[%d] exited\n",tsk->id);
+	schedule();
+	printf("thread [%d] resume\n",tsk->id);
 }
 
 int thread_create(int *tid,void (*start_routine)()) {
@@ -36,7 +38,10 @@ int thread_create(int *tid,void (*start_routine)()) {
 	tsk->th_fn = start_routine;
 	int *stack = tsk->stack;
 	tsk->esp = (int)(stack + STACK_SIZE - 11);
-
+	tsk->wakeuptime = 0;
+	tsk->status = THREAD_RUNNING;
+	tsk->counter = 15;
+	tsk->priority = 15;
 	//init func stack frame
 	stack[STACK_SIZE - 11] = 7;
 	stack[STACK_SIZE - 10] = 6;
@@ -51,4 +56,13 @@ int thread_create(int *tid,void (*start_routine)()) {
 	stack[STACK_SIZE - 1] = (int)tsk;
 
 	return 0;
+}
+
+int thread_join(int tid) {
+	while(task[tid]->status != THREAD_EXIT) {
+		schedule();
+	}
+	free(task[tid]);
+	task[tid] = NULL;
+
 }
