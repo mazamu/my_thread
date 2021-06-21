@@ -9,9 +9,9 @@
 /**
    * Atomic type.
     */
-typedef struct {
+typedef struct Atomic_t{
 		volatile int counter;
-} atomic_t;
+}atomic_t;
  
 #define ATOMIC_INIT(i)  { (i) }
  
