@@ -1,11 +1,13 @@
+/*void switch_to(struct task_struct* next)*/
 
 .section .text
 .global switch_to
-
 switch_to:
-	push %ebp;
-	mov %esp,%ebp;
+	call closealarm
+	push %ebp
+	mov %esp,%ebp /* in order to find flag */
 
+	/*store the status*/
 	push %edi
 	push %esi
 	push %ebx
@@ -14,11 +16,12 @@ switch_to:
 	push %eax
 	pushfl
 
-	mov cur,%eax
-	mov %esp,task(,%eax,4)
-	mov 8(%ebp),%eax
-	mov %eax,cur
-	mov task(,%eax,4),%esp
+	/*prepare to change stack*/
+	mov current,%eax /*store the esp*/
+	mov %esp,8(%eax)
+	mov 8(%ebp),%eax /*get the next thread id*/
+	mov %eax,current /*set current the next thread*/
+	mov 8(%eax),%esp /*switch_to the stack of next thread*/
 
 	popfl
 	popl %eax
@@ -29,5 +32,5 @@ switch_to:
 	popl %edi
 
 	popl %ebp
+	call openalarm
 	ret
-

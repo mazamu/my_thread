@@ -1,60 +1,62 @@
 #include<stdio.h>
-#include<unistd.h>
-
-int task[3] = {0,0,0};
-int cur = 0;
-void switch_to(int n);
+#include<stdlib.h>
+#include"thread.h"
 
 void fun1() {
-	while(1) {
+	int i = 10;
+	while(i--) {
 		printf("hello,I'm fun1\n");
-		sleep(1);
-		switch_to(2);
+		mysleep(2);
 	}
 }
+
 void fun2() {
-	while(1) {
+	int i = 10;
+	while(i--) {
 		printf("hello,I'm fun2\n");
-		sleep(1);
-		switch_to(1);
+		mysleep(1);
 	}
 }
 
-void start(int n) {
-	if(n == 1) fun1();
-	else if(n == 2) fun2();
+void fun3() {
+	int i = 2;
+	while(i--) {
+		printf("hello,I'm fun3\n");
+		mysleep(1);
+	}
 }
 
-int main() {
-	int stack1[1024] = {0};
-	int stack2[1024] = {0};
+void fun4() {
+	int i = 15;
+	int m,n;
+	while(i--) {
+		printf("hello,I'm fun4\n");
+		for(m = 0; m < 10000; m++) 
+		  for(n = 0; n < 10000; n++);
+	}
+}
 
-	task[1] = (int)(stack1 + 1013);
-	task[2] = (int)(stack2 + 1013);
-	stack1[1013] = 7;//eflags
-	stack1[1014] = 6;
-	stack1[1015] = 5;
-	stack1[1016] = 4;
-	stack1[1017] = 3;
-	stack1[1018] = 2;
-	stack1[1019] = 1;
-	stack1[1020] = 0;//old ebp
-	stack1[1021] = (int)start;
-	stack1[1022] = 100;//ret to unknown
-	stack1[1023] = 1;
+int main()
+{
+	int tid1,tid2,tid3,tid4;
+	thread_create(&tid1,fun1);
+	printf("create thread %d\n",tid1);
+	thread_create(&tid2,fun2);
+	printf("create thread %d\n",tid2);
+	thread_create(&tid3,fun3);
+	printf("create thread %d\n",tid3);
+	thread_create(&tid4,fun4);
+	printf("create thread %d\n",tid4);
 	
-	stack2[1013] = 7;//eflags
-	stack2[1014] = 6;
-	stack2[1015] = 5;
-	stack2[1016] = 4;
-	stack2[1017] = 3;
-	stack2[1018] = 2;
-	stack2[1019] = 1;
-	stack2[1020] = 0;//old ebp
-	stack2[1021] = (int)start;
-	stack2[1022] = 100;//ret to unknown
-	stack2[1023] = 2;
-
-	switch_to(1);
+	int i = 2;
+	while(i--) {
+		printf("hello,I'm main\n");
+		mysleep(3);
+	}
+	thread_join(tid1);
+	thread_join(tid2);
+	thread_join(tid3);
+	thread_join(tid4);
+	
 	return 0;
 }
