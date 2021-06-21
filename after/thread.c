@@ -8,6 +8,10 @@ void schedule();
 static struct task_struct init_task = {0,NULL,THREAD_RUNNING,0,0,15,15,{0}};
 struct task_struct *current = &init_task;
 struct task_struct *task[NR_TASKS] = {&init_task};
+
+int gettid() {
+	return current->id;
+}
 void start(struct task_struct *tsk) {
 	tsk->th_fn();
 	tsk->status = THREAD_EXIT;
