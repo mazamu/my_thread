@@ -6,7 +6,7 @@ switch_to:
 	call closealarm
 	push %ebp
 	mov %esp,%ebp /* in order to find flag */
-
+	
 	/*store the status*/
 	push %edi
 	push %esi
@@ -15,6 +15,7 @@ switch_to:
 	push %ecx
 	push %eax
 	pushfl
+	
 
 	/*prepare to change stack*/
 	mov current,%eax /*store the esp*/

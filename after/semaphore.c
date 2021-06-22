@@ -35,9 +35,9 @@ struct task_struct* get_task(sem_queue *q) {
 }
 
 //将线程插入队尾
-int insert_task(struct task_struct* p,sem_queue* q) {
-	
-	//printf("insert %d\n",p->id);
+int insert_task(struct task_struct* p,sem_t* sem) {
+	sem_queue *q = &sem->wait_queue;
+	printf("thread %d insert to %s\n",p->id,sem->name);
 	if(is_full(q)) {
 		printf("Queue is full\n");
 		return -1;
@@ -102,8 +102,8 @@ int sem_wait(sem_t* sem) {
 	//0 - 1 = -1,资源不足,睡眠
 	if(atomic_read(&sem->value) < 0) {
 		current->status = THREAD_UNINTERRUPTIBLE;
-		insert_task(current,&sem->wait_queue);
-		mysleep(1);
+		insert_task(current,sem);
+		mysleep(0.1);
 	}
 
 	return 0;
