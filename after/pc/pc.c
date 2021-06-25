@@ -41,8 +41,8 @@ void consumer() {
 			lseek(fno,10 * sizeof(int),SEEK_SET);
 			write(fno,(char*)&buf_out,sizeof(int));
 
-			sem_post(mutex);
-			sem_post(empty);
+		sem_post(mutex);
+		sem_post(empty);
 
 			printf("%d: %d\n",gettid(),data);
 			//mysleep(0.1);
