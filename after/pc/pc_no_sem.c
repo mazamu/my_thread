@@ -4,9 +4,9 @@
 #include<fcntl.h>
 #include"../semaphore.h"
 
-#define NUMBER 520 /*打出数字总数*/
+#define NUMBER 50 /*打出数字总数*/
 #define CHILD 4 /*消费者进程数*/
-#define BUFSIZE 10 /*缓冲区大小*/
+#define BUFSIZE 5 /*缓冲区大小*/
 int fno;//文件描述符
 int  buf_out = 0; /*从缓冲区读取位置*/
 int  buf_in = 0; /*写入缓冲区位置*/
