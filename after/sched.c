@@ -72,11 +72,12 @@ static struct task_struct *pick() {
 	return task[next];
 }
 
+//屏蔽时钟信号
 void closealarm() {
 	sigset_t mask;
 	sigemptyset(&mask);
 	sigaddset(&mask,SIGALRM);
-	if(sigprocmask(SIG_BLOCK,&mask,NULL) < 0) {
+	if(sigprocmask(SIG_BLOCK,&mask,NULL) < 0) {//第一个参数表示当前信号集和mask信号集的并集，mask包含希望阻塞的信号
 		perror("sigprocmask BLOCK");
 	}
 }
@@ -85,7 +86,7 @@ void openalarm() {
 	sigset_t mask;
 	sigemptyset(&mask);
 	sigaddset(&mask,SIGALRM);
-	if(sigprocmask(SIG_UNBLOCK,&mask,NULL) < 0) {
+	if(sigprocmask(SIG_UNBLOCK,&mask,NULL) < 0) {//第一个参数表示当前信号集和mask信号集的补集的交集，mask包含希望阻塞的信号
 		perror("sigprocmask BLOCK");
 	}
 	
@@ -109,6 +110,8 @@ static void do_timer() {
 	current->counter = 0;
 	schedule();
 }
+
+//第一行表示 被标记的函数在 main 函数前执行
 __attribute__((constructor))
 static void init() {
 	struct itimerval value;
@@ -119,5 +122,5 @@ static void init() {
 	if(setitimer(ITIMER_REAL,&value,NULL) < 0) {
 		perror("setitimer");
 	}
-	signal(SIGALRM,do_timer);
+	signal(SIGALRM,do_timer);//每10ms发一次信号并调用时间片函数
 }
