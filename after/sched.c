@@ -82,6 +82,7 @@ void closealarm() {
 	}
 }
 
+//解除屏蔽时钟信号
 void openalarm() {
 	sigset_t mask;
 	sigemptyset(&mask);
