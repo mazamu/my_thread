@@ -44,8 +44,8 @@ int thread_create(int *tid,void (*start_routine)()) {
 	tsk->esp = (int)(stack + STACK_SIZE - 11);
 	tsk->wakeuptime = 0;
 	tsk->status = THREAD_RUNNING;
-	tsk->counter = 5;
-	tsk->priority = 5;
+	tsk->counter = 15;
+	tsk->priority = 15;
 	//init func stack frame
 	stack[STACK_SIZE - 11] = 7;
 	stack[STACK_SIZE - 10] = 6;
