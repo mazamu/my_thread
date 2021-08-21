@@ -5,7 +5,7 @@
 #include<stdlib.h>
 
 void schedule();
-static struct task_struct init_task = {0,NULL,THREAD_RUNNING,0,0,15,15,{0}};
+static struct task_struct init_task = {0,NULL,0,0,THREAD_RUNNING,15,15,{0}};
 struct task_struct *current = &init_task;
 struct task_struct *task[NR_TASKS] = {&init_task};
 
